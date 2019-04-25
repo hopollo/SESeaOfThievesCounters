@@ -1,0 +1,57 @@
+{
+  "sloopsCommand": {
+    "type": "text",
+    "label": "sloop command",
+    "value": "!sloop"
+  },
+  "brigsCommand": {
+    "type": "text",
+    "label": "Brig command:",
+    "value": "!brig"
+  },
+  "galysCommand": {
+    "type": "text",
+    "label": "Galion command:",
+    "value": "!galion"
+  },
+  "refreshCommand": {
+    "type": "text",
+    "label": "Refresh command (Broadcaster only)",
+    "value": "!sotrefresh"
+  },
+  "textColor": {
+    "type": "color",
+    "label": "Some color",
+    "value": "#ff0000"
+  },
+  "votesNeeded": {
+    "type": "number",
+    "label": "Votes required: (SOON)",
+    "value": 2
+  },
+  "cooldownValue": {
+    "type": "slider",
+    "label": "Cooldown: (SOON)",
+    "value": 5,
+    "min": 0,
+    "max": 10,
+    "steps": 1
+  },
+  "commandPermission": {
+    "type": "dropdown",
+    "label": "Permissions: (SOON)",
+    "value": "Mods + Vips",
+    "options": {
+      "highest": "Broadcaster only",
+      "high": "Broadcaster + Mods",
+      "medium": "Mods + Vips",
+      "low": "Mods + Vips + Subs",
+      "verylow": "Everybody"
+    }
+  },
+  "textFont": {
+    "type": "googleFont",
+    "label": "Font:",
+    "value": "OpenSans"
+  }
+}
