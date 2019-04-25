@@ -1,1 +1,4 @@
+- 25/04/2019 : 
+Added custom commands & colors & fonts
+Ajout des commandes, couleurs et police d'ecriture personnalisés.
 
