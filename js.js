@@ -1,92 +1,94 @@
-/* By HoPollo, v1.5 */
+/* By HoPollo */
 let onCooldown = false;
+let currentVotes = 0;
 
-window.addEventListener('onEventReceived', function(obj) {
-    const listener = obj.detail.listener;
-    const data = obj.detail.event;
-  	const messageData = data.data.text;
-  	const userType = data.data.tags.badges;
+window.addEventListener('onEventReceived', (obj) => {
+    const event = {
+      LISTENER 	: obj.detail.listener,
+      DATA 		: obj.detail.event,
+      MESSAGE 	: obj.detail.event.data.text,
+      USERTYPE 	: obj.detail.event.data.tags.badges
+    }
+    
+    let counter = {
+      SLOOP 	: parseInt($('.sloopsCounter').text()),
+      BRIG  	: parseInt($('.brigsCounter').text()),
+      GALION  	: parseInt($('.galysCounter').text())
+    }
   
-  	let currentVotes = 0;
-  
-  	let sloopsCounter = parseInt($('.sloopsCounter').text());
-    let brigsCounter  = parseInt($('.brigsCounter').text());
-    let galysCounter  = parseInt($('.galysCounter').text());
-  
-    if (listener === 'message') {
-      	// deny vote from randoms, but allow for anyone else
-      	switch(userType) {
+    if (event.LISTENER === 'message') {
+      	switch(event.USERTYPE) {
           case "":
             return;
             break;
         }
       
-        switch(messageData) {
+        switch(event.MESSAGE) {
           case '{{sloopsCommand}}':
-            addSloop();
-            break;
+            addSloop()
+            break
           case '{{brigsCommand}}':
-            addBrig();
-            break;
+            addBrig()
+            break
           case '{{galysCommand}}':
-            addGalion();
-           	break;
+            addGalion()
+            break
           case '{{refreshCommand}}':
             refreshCounters()
-            break;
+            break
           case '{{sloopsCommand}}-':
             removeSloop()
-            break;
+            break
           case '{{brigsCommand}}-':
             removeBrig()
-            break;
+            break
           case '{{galysCommand}}-':
             removeGalion()
-            break;
+            break
         }
     }
   
   	function addSloop() {
       if (onCooldown) { return; }
-      sloopsCounter = sloopsCounter + 1;
-      $('.sloopsCounter').text(sloopsCounter);
+      counter.SLOOP = counter.SLOOP + 1;
+      $('.sloopsCounter').text(counter.SLOOP);
       waitCooldown();
     }
 
     function addBrig() {
       if (onCooldown) { return; }
-      brigsCounter = brigsCounter + 1;
-      $('.brigsCounter').text(brigsCounter);
+      counter.BRIG = counter.BRIG + 1;
+      $('.brigsCounter').text(counter.BRIG);
       waitCooldown();
     }
 
     function addGalion() {
-      if (onCooldown) { return; }
-      galysCounter = galysCounter + 1;
-      $('.galysCounter').text(galysCounter);
+      if (onCooldown) { return }
+      counter.GALION = counter.GALION + 1;
+      $('.galysCounter').text(counter.GALION);
       waitCooldown();
     }
   
   	function removeSloop() {
-      if (sloopsCounter < 1 && userType !='broadcaster' || sloopsCounter < 1 && userType != 'moderator') { return; }
-      	sloopsCounter = sloopsCounter - 1;
-  		$('.sloopsCounter').text(sloopsCounter);
+      if (sloopsCounter === 0 && userType !='broadcaster' || sloopsCounter === 0 && userType != 'moderator') { return }
+      sloopsCounter = sloopsCounter - 1;
+      $('.sloopsCounter').text(sloopsCounter);
     }
   
   	function removeBrig() {
-      if (brigsCounter < 1 && userType !='broadcaster' || brigsCounter < 1 && userType != 'moderator') { return; }
-      	brigsCounter = brigsCounter - 1;
-  		$('.brigsCounter').text(brigsCounter);
+      if (brigsCounter === 0 && userType !='broadcaster' || brigsCounter === 0 && userType != 'moderator') { return }
+      brigsCounter = brigsCounter - 1;
+      $('.brigsCounter').text(brigsCounter);
     }
   
   	function removeGalion() {
-      if (galysCounter < 1 && userType !='broadcaster' || galysCounter < 1 && userType != 'moderator') { return; }
-      	galysCounter = galysCounter - 1;
-  		$('.galysCounter').text(galysCounter);
+      if (galysCounter === 0 && userType !='broadcaster' || galysCounter === 0 && userType != 'moderator') { return }
+      galysCounter = galysCounter - 1;
+      $('.galysCounter').text(galysCounter);
     }
   
   	function refreshCounters() {
-      if (userType != 'broadcaster') { return; }
+      if (userType != 'broadcaster') { return }
       $('.sloopsCounter').text(0);
       $('.brigsCounter').text(0);
       $('.galysCounter').text(0);
@@ -94,18 +96,27 @@ window.addEventListener('onEventReceived', function(obj) {
 });
 
 window.addEventListener('onWidgetLoad', function(obj) {
-  const url = `https://decapi.me/twitch/game/${obj.detail.channel.username}`;
-  fetch(url)
-    .then(res => res.text())
-    .then(data => {
-  		if (data != 'Sea of Thieves') { return; }
-    	$('.main-container').css('display','flex');
-  	})
+  checkStatus()
+  
+  function checkStatus() {
+  	const url = `https://decapi.me/twitch/game/${obj.detail.channel.username}`
+    fetch(url)
+      .then(res => res.text())
+      .then(data => {
+          if (data != 'Sea of Thieves') { return }
+          $('.main-container').css('display','flex')
+      })
+  }
+  
+  setInterval(() => {
+    checkStatus()
+  }, 5*1000*60)
 });
 
 function waitCooldown() {
  	onCooldown = true;
   	setTimeout(() => {
         onCooldown = false;
-    }, {{cooldownValue}}*1000*60);
+    }, 5000);
+    //}, {{cooldownValue}}*1000*60);
 }
