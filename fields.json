@@ -31,7 +31,7 @@
   },
   "cooldownValue": {
     "type": "slider",
-    "label": "Cooldown: (SOON)",
+    "label": "Cooldown in minutes:",
     "value": 5,
     "min": 0,
     "max": 10,
@@ -42,8 +42,8 @@
     "label": "Permissions: (SOON)",
     "value": "Mods + Vips",
     "options": {
-      "highest": "Broadcaster only",
-      "high": "Broadcaster + Mods",
+      "highest": "Broadcaster",
+      "high": "Mods",
       "medium": "Mods + Vips",
       "low": "Mods + Vips + Subs",
       "verylow": "Everybody"
