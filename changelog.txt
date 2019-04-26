@@ -1,6 +1,6 @@
 - 25/04/2019 :
-Added cooldown feature
-Ajout de la fonctionnalitée de temps d'attente
+Added 50% of final cooldown feature
+Ajout de 50% de la fonctionnalitée de temps d'attente
 
 Added custom commands & colors & fonts
 Ajout des commandes, couleurs et police d'ecriture personnalisés.
