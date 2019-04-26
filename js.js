@@ -25,45 +25,45 @@ window.addEventListener('onEventReceived', (obj) => {
       
         switch(event.MESSAGE) {
           case '{{sloopsCommand}}':
-            addSloop()
-            break
+            addSloop();
+            break;
           case '{{brigsCommand}}':
-            addBrig()
-            break
+            addBrig();
+            break;
           case '{{galysCommand}}':
-            addGalion()
-            break
+            addGalion();
+            break;
           case '{{refreshCommand}}':
-            refreshCounters()
-            break
+            refreshCounters();
+            break;
           case '{{sloopsCommand}}-':
-            removeSloop()
-            break
+            removeSloop();
+            break;
           case '{{brigsCommand}}-':
-            removeBrig()
-            break
+            removeBrig();
+            break;
           case '{{galysCommand}}-':
-            removeGalion()
-            break
+            removeGalion();
+            break;
         }
     }
   
   	function addSloop() {
-      if (onCooldown) { return; }
+      if (onCooldown) return;
       counter.SLOOP = counter.SLOOP + 1;
       $('.sloopsCounter').text(counter.SLOOP);
       waitCooldown();
     }
 
     function addBrig() {
-      if (onCooldown) { return; }
+      if (onCooldown) return;
       counter.BRIG = counter.BRIG + 1;
       $('.brigsCounter').text(counter.BRIG);
       waitCooldown();
     }
 
     function addGalion() {
-      if (onCooldown) { return }
+      if (onCooldown) return;
       counter.GALION = counter.GALION + 1;
       $('.galysCounter').text(counter.GALION);
       waitCooldown();
@@ -96,21 +96,21 @@ window.addEventListener('onEventReceived', (obj) => {
 });
 
 window.addEventListener('onWidgetLoad', function(obj) {
-  checkStatus()
+  checkStatus();
   
   function checkStatus() {
-  	const url = `https://decapi.me/twitch/game/${obj.detail.channel.username}`
+  	const url = `https://decapi.me/twitch/game/${obj.detail.channel.username}`;
     fetch(url)
       .then(res => res.text())
       .then(data => {
-          if (data != 'Sea of Thieves') { return }
-          $('.main-container').css('display','flex')
+          if (data != 'Sea of Thieves') return;
+          $('.main-container').css('display','flex');
       })
   }
   
   setInterval(() => {
-    checkStatus()
-  }, 5*1000*60)
+    checkStatus();
+  }, 5*1000*60);
 });
 
 function waitCooldown() {
