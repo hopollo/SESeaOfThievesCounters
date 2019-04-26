@@ -1,18 +1,26 @@
-/* By HoPollo, v1.2 */
+/* By HoPollo, v1.5 */
+let onCooldown = false;
 
 window.addEventListener('onEventReceived', function(obj) {
     const listener = obj.detail.listener;
     const data = obj.detail.event;
   	const messageData = data.data.text;
-  	const userType = data.data.badges[0].type;
-  	const votesRequiered = '{{v}}';
-
+  	const userType = data.data.tags.badges;
+  
+  	let currentVotes = 0;
+  
   	let sloopsCounter = parseInt($('.sloopsCounter').text());
     let brigsCounter  = parseInt($('.brigsCounter').text());
     let galysCounter  = parseInt($('.galysCounter').text());
   
     if (listener === 'message') {
-      	if (userType != 'broadcaster' && userType != 'moderator' && userType != 'vip') { return; }
+      	// deny vote from randoms, but allow for anyone else
+      	switch(userType) {
+          case "":
+            return;
+            break;
+        }
+      
         switch(messageData) {
           case '{{sloopsCommand}}':
             addSloop();
@@ -39,18 +47,24 @@ window.addEventListener('onEventReceived', function(obj) {
     }
   
   	function addSloop() {
+      if (onCooldown) { return; }
       sloopsCounter = sloopsCounter + 1;
       $('.sloopsCounter').text(sloopsCounter);
+      waitCooldown();
     }
 
     function addBrig() {
+      if (onCooldown) { return; }
       brigsCounter = brigsCounter + 1;
       $('.brigsCounter').text(brigsCounter);
+      waitCooldown();
     }
 
     function addGalion() {
+      if (onCooldown) { return; }
       galysCounter = galysCounter + 1;
       $('.galysCounter').text(galysCounter);
+      waitCooldown();
     }
   
   	function removeSloop() {
@@ -80,7 +94,7 @@ window.addEventListener('onEventReceived', function(obj) {
 });
 
 window.addEventListener('onWidgetLoad', function(obj) {
-  const url = `https://decapi.me/twitch/game/hopollo`;
+  const url = `https://decapi.me/twitch/game/${obj.detail.channel.username}`;
   fetch(url)
     .then(res => res.text())
     .then(data => {
@@ -88,3 +102,10 @@ window.addEventListener('onWidgetLoad', function(obj) {
     	$('.main-container').css('display','flex');
   	})
 });
+
+function waitCooldown() {
+ 	onCooldown = true;
+  	setTimeout(() => {
+        onCooldown = false;
+    }, {{cooldownValue}}*1000*60);
+}
