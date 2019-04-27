@@ -70,25 +70,25 @@ window.addEventListener('onEventReceived', (obj) => {
     }
   
   	function removeSloop() {
-      if (sloopsCounter === 0 && userType !='broadcaster' || sloopsCounter === 0 && userType != 'moderator') { return }
-      sloopsCounter = sloopsCounter - 1;
-      $('.sloopsCounter').text(sloopsCounter);
+      if (counter.SLOOP === 0 && event.USERTYPE !='broadcaster/1' || counter.SLOOP === 0 && event.USERTYPE != 'moderator/1') return;
+      counter.SLOOP = counter.SLOOP - 1;
+      $('.sloopsCounter').text(counter.SLOOP);
     }
   
   	function removeBrig() {
-      if (brigsCounter === 0 && userType !='broadcaster' || brigsCounter === 0 && userType != 'moderator') { return }
-      brigsCounter = brigsCounter - 1;
-      $('.brigsCounter').text(brigsCounter);
+      if (counter.BRIG === 0 && event.USERTYPE !='broadcaster/1' || counter.BRIG === 0 && event.USERTYPE != 'moderator/1') return;
+      counter.BRIG = counter.BRIG - 1;
+      $('.brigsCounter').text(counter.BRIG);
     }
   
   	function removeGalion() {
-      if (galysCounter === 0 && userType !='broadcaster' || galysCounter === 0 && userType != 'moderator') { return }
-      galysCounter = galysCounter - 1;
-      $('.galysCounter').text(galysCounter);
+      if (counter.GALION === 0 && event.USERTYPE !='broadcaster/1' || counter.GALION === 0 && event.USERTYPE != 'moderator/1') return;
+      counter.GALION = counter.GALION - 1;
+      $('.galysCounter').text(counter.GALION);
     }
   
   	function refreshCounters() {
-      if (userType != 'broadcaster') { return }
+      if (event.USERTYPE != 'broadcaster/1') return;
       $('.sloopsCounter').text(0);
       $('.brigsCounter').text(0);
       $('.galysCounter').text(0);
@@ -96,21 +96,21 @@ window.addEventListener('onEventReceived', (obj) => {
 });
 
 window.addEventListener('onWidgetLoad', function(obj) {
-  checkStatus();
+  checkStatus()
   
   function checkStatus() {
-  	const url = `https://decapi.me/twitch/game/${obj.detail.channel.username}`;
+  	const url = `https://decapi.me/twitch/game/${obj.detail.channel.username}`
     fetch(url)
       .then(res => res.text())
       .then(data => {
-          if (data != 'Sea of Thieves') return;
-          $('.main-container').css('display','flex');
+          if (data != 'Sea of Thieves') { return }
+          $('.main-container').css('display','flex')
       })
   }
   
   setInterval(() => {
-    checkStatus();
-  }, 5*1000*60);
+    checkStatus()
+  }, 5*1000*60)
 });
 
 function waitCooldown() {
