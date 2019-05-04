@@ -1,7 +1,12 @@
 {
+  "winsCommand": {
+    "type": "text",
+    "label": "Win command",
+    "value": "!win"
+  },
   "sloopsCommand": {
     "type": "text",
-    "label": "sloop command",
+    "label": "Sloop command",
     "value": "!sloop"
   },
   "brigsCommand": {
@@ -14,10 +19,15 @@
     "label": "Galion command:",
     "value": "!galion"
   },
-  "refreshCommand": {
+  "SOTRefreshCommand": {
     "type": "text",
-    "label": "Refresh command (Broadcaster only)",
+    "label": "SOT Refresh command (Broadcaster only)",
     "value": "!sotrefresh"
+  },
+  "WinsRefreshCommand": {
+    "type": "text",
+    "label": "Wins Refresh command (Broadcaster only)",
+    "value": "!winsrefresh"
   },
   "textColor": {
     "type": "color",
