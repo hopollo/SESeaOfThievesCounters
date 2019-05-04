@@ -9,11 +9,13 @@
 }
 
 .main-container {
-  	display : none;
-  	flex-wrap: wrap;
-  	text-align: center;
-  	justify-content: center;
+  display : none; 
+  flex-wrap: wrap;
+  text-align: center;
+  justify-content: center;
 }
+
+.sotCounters, .victoryCounters { display: none; }
 
 .counters { font-size: 20px; font-weight: bold; text-shadow: 1px 1px 1px black; }
 
