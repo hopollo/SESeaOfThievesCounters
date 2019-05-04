@@ -125,7 +125,7 @@ window.addEventListener('onEventReceived', (obj) => {
       $('.sloopsCounter').text(0);
       $('.brigsCounter').text(0);
       $('.galysCounter').text(0);
-      $('.victoryCounter').text(0);
+      $('.winsCounter').text(0);
     }
 });
 
