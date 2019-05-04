@@ -13,7 +13,8 @@ window.addEventListener('onEventReceived', (obj) => {
     let counter = {
       SLOOP 	: parseInt($('.sloopsCounter').text()),
       BRIG  	: parseInt($('.brigsCounter').text()),
-      GALION  	: parseInt($('.galysCounter').text())
+      GALION  	: parseInt($('.galysCounter').text()),
+      WINS 		: parseInt($('.winsCounter').text())
     }
   
     if (event.LISTENER === 'message') {
@@ -24,6 +25,9 @@ window.addEventListener('onEventReceived', (obj) => {
         }
       
         switch(event.MESSAGE) {
+          case '{{winsCommand}}':
+            addWin();
+            break;
           case '{{sloopsCommand}}':
             addSloop();
             break;
@@ -33,8 +37,12 @@ window.addEventListener('onEventReceived', (obj) => {
           case '{{galysCommand}}':
             addGalion();
             break;
-          case '{{refreshCommand}}':
+          case '{{SOTRefreshCommand}}':
+          case '{{WinsRefreshCommand}}':
             refreshCounters();
+            break;
+          case '{{winsCommand}}-':
+            removeWin();
             break;
           case '{{sloopsCommand}}-':
             removeSloop();
@@ -45,7 +53,26 @@ window.addEventListener('onEventReceived', (obj) => {
           case '{{galysCommand}}-':
             removeGalion();
             break;
+          case '!sotshow':
+            if (event.USERTYPE === 'broadcaster/1') showSOTCounters();
+            break;
+          case '!sothide':
+            if (event.USERTYPE === 'broadcaster/1') hideSOTCounters();
+            break;
+          case '!winsshow':
+            if (event.USERTYPE === 'broadcaster/1') showWinsCounters();
+            break;
+          case '!winshide':
+            if (event.USERTYPE === 'broadcaster/1') hideWinsCounters();
+            break;
         }
+    }
+  
+  	function addWin() {
+      if (onCooldown) return;
+      counter.WINS = counter.WINS + 1;
+      $('.winsCounter').text(counter.WINS);
+      waitCooldown();
     }
   
   	function addSloop() {
@@ -87,36 +114,51 @@ window.addEventListener('onEventReceived', (obj) => {
       $('.galysCounter').text(counter.GALION);
     }
   
+  	function removeWin() {
+      if (counter.WINS === 0 && event.USERTYPE !='broadcaster/1' || counter.WINS === 0 && event.USERTYPE != 'moderator/1') return;
+      counter.WINS = counter.WINS - 1;
+      $('.winsCounter').text(counter.WINS);
+    }
+  
   	function refreshCounters() {
       if (event.USERTYPE != 'broadcaster/1') return;
       $('.sloopsCounter').text(0);
       $('.brigsCounter').text(0);
       $('.galysCounter').text(0);
+      $('.victoryCounter').text(0);
     }
 });
 
 window.addEventListener('onWidgetLoad', function(obj) {
-  checkStatus()
-  
-  function checkStatus() {
-  	const url = `https://decapi.me/twitch/game/${obj.detail.channel.username}`
+  	const url = `https://decapi.me/twitch/game/${obj.detail.channel.username}`;
     fetch(url)
       .then(res => res.text())
       .then(data => {
-          if (data != 'Sea of Thieves') { return }
-          $('.main-container').css('display','flex')
+          switch(data) {
+            case 'Sea of Thieves':
+              $('.main-container').css('display', 'flex');
+              showSOTCounters();
+              break;
+            case 'Fortnite':
+              $('.main-container').css('display', 'flex');
+              showWinsCounters();
+              break;
+            default:
+              $('.main-container').css('display', 'none');
+          }
       })
-  }
-  
-  setInterval(() => {
-    checkStatus()
-  }, 5*1000*60)
+  	  .catch(err => console.error(err))
 });
+
+function hideSOTCounters()  { $('.sotCounters').css('display','none'); 	  }
+function showSOTCounters()  { $('.main-container').css('display', 'flex'); $('.sotCounters').css('display','block'); 	  }
+function hideWinsCounters() { $('.victoryCounters').css('display','none'); }
+function showWinsCounters() { $('.main-container').css('display', 'flex'); $('.victoryCounters').css('display','block'); }
 
 function waitCooldown() {
  	onCooldown = true;
   	setTimeout(() => {
-        onCooldown = false;
+    	onCooldown = false;
     }, 5000);
     //}, {{cooldownValue}}*1000*60);
 }
