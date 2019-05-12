@@ -177,8 +177,12 @@ function showWinsCounters()  {
   fetch(`https://cors-anywhere.herokuapp.com/https://api.fortnitetracker.com/v1/profile/pc/{{epicGameName}}`, options)
     .then(res => res.json())
     .then(data => {
-    	counter.WINS = data.stats.curr_p9.top1.value
-    	$('.winsCounter').text(counter.WINS);
+    	Object.keys(data.stats).forEach((_) => {
+      		if (_.includes('curr_')) { 
+              counter.WINS = data.stats[_].top1.value;
+          	  $('.winsCounter').text(counter.WINS);
+            }
+   	 	})
   	})
     .catch(err => console.log(err))
 }
