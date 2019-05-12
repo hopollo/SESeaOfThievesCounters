@@ -2,6 +2,8 @@
 let onCooldown = false;
 let currentVotes = 0;
 
+const pubgPlayerName = "HoPollo";
+
 window.addEventListener('onEventReceived', (obj) => {
     const event = {
       LISTENER 	: obj.detail.listener,
@@ -14,7 +16,8 @@ window.addEventListener('onEventReceived', (obj) => {
       SLOOP 	: parseInt($('.sloopsCounter').text()),
       BRIG  	: parseInt($('.brigsCounter').text()),
       GALION  	: parseInt($('.galysCounter').text()),
-      WINS 		: parseInt($('.winsCounter').text())
+      WINS 		: parseInt($('.winsCounter').text()),
+      KILLS 	: parseInt($('.killsCounter').text())
     }
   
     if (event.LISTENER === 'message') {
@@ -64,6 +67,12 @@ window.addEventListener('onEventReceived', (obj) => {
             break;
           case '!winshide':
             if (event.USERTYPE === 'broadcaster/1') hideWinsCounters();
+            break;
+          case '!killsshow':
+            if (event.USERTYPE === 'broadcaster/1') showKillsCounters();
+            break;
+          case '!killshide':
+            if (event.USERTYPE === 'broadcaster/1') hideKillsCounters();
             break;
         }
     }
@@ -143,6 +152,9 @@ window.addEventListener('onWidgetLoad', function(obj) {
               $('.main-container').css('display', 'flex');
               showWinsCounters();
               break;
+            case "PLAYERUNKNOWN'S BATTLEGROUNDS":
+              $('.main-container').css('display', 'flex');
+              showKillsCounters();
             default:
               $('.main-container').css('display', 'none');
           }
@@ -150,10 +162,48 @@ window.addEventListener('onWidgetLoad', function(obj) {
   	  .catch(err => console.error(err))
 });
 
-function hideSOTCounters()  { $('.sotCounters').css('display','none'); 	  }
-function showSOTCounters()  { $('.main-container').css('display', 'flex'); $('.sotCounters').css('display','block'); 	  }
-function hideWinsCounters() { $('.victoryCounters').css('display','none'); }
-function showWinsCounters() { $('.main-container').css('display', 'flex'); $('.victoryCounters').css('display','block'); }
+function hideSOTCounters()   { $('.sotCounters').css('display','none'); }
+function showSOTCounters()   { $('.main-container').css('display', 'flex'); $('.sotCounters').css('display','block'); }
+function hideWinsCounters()  { $('.victoryCounters').css('display','none'); }
+function showWinsCounters()  { $('.main-container').css('display', 'flex'); $('.victoryCounters').css('display','block'); }
+function hideKillsCounters() { $('.dailyKillsCounters').css('display','none'); }
+function showKillsCounters() {
+  $('.main-container').css('display', 'flex');
+  $('.dailyKillsCounters').css('display', 'block');
+  const options = {
+    headers: {
+      "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJiMjI1Yjk1MC01NjdiLTAxMzctOGJmZC0wYzUxY2E4YzhkMGEiLCJpc3MiOiJnYW1lbG9ja2VyIiwiaWF0IjoxNTU3NjIxMjk4LCJwdWIiOiJibHVlaG9sZSIsInRpdGxlIjoicHViZyIsImFwcCI6ImhvcG9sbG90di1nbWFpIn0.Qyfl1mYA0liTm7dVLFmIoHK-a-xukjnyMR7NZZA-Lzk",
+      "Accept": "application/vnd.api+json"
+    }
+  }
+
+  fetch("https://api.pubg.com/shards/steam/seasons", options)
+    .then(res => res.json())
+    .then(data => {
+    const seasonID = data.data[data.data.length-1].id;
+    fetch(`https://api.pubg.com/shards/steam/players?filter[playerNames]=${pubgPlayerName}`, options)
+      .then(res => res.json())
+      .then(data => { 
+      const accountID = data.data[0].id;
+      fetch(`https://api.pubg.com/shards/steam/players/${accountID}/seasons/${seasonID}`, options)
+        .then(res => res.json())
+        .then(data => {
+          const info = data.data.attributes.gameModeStats;
+          const solo = info.solo.dailyKills;
+          const duo = info.duo.dailyKills;
+          const squad = info.squad.dailyKills;
+          const soloFpp = info["solo-fpp"].dailyKills;
+          const duoFpp = info["duo-fpp"].dailyKills;
+          const squadFpp = info["squad-fpp"].dailyKills;
+        
+          $('.killsCounter').text(solo + duo + squad + soloFpp + duoFpp + squadFpp);
+      	})
+        .catch(err => console.log(err))
+    	})
+      .catch(err => console.error(err))
+  	})
+    .catch(err => console.error(err))
+}
 
 function waitCooldown() {
  	onCooldown = true;
