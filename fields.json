@@ -4,6 +4,16 @@
     "label": "Win command",
     "value": "!win"
   },
+  "pubgName": {
+    "type": "text",
+    "label": "PUBG Name",
+    "value": ""
+  },
+  "epicGameName": {
+    "type": "text",
+    "label": "Fortnite Name",
+    "value": ""
+  },
   "sloopsCommand": {
     "type": "text",
     "label": "Sloop command",
