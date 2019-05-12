@@ -2,7 +2,13 @@
 let onCooldown = false;
 let currentVotes = 0;
 
-const pubgPlayerName = "HoPollo";
+let counter = {
+      SLOOP 	: parseInt($('.sloopsCounter').text()),
+      BRIG  	: parseInt($('.brigsCounter').text()),
+      GALION  	: parseInt($('.galysCounter').text()),
+      WINS 		: parseInt($('.winsCounter').text()),
+      KILLS 	: parseInt($('.killsCounter').text())
+}
 
 window.addEventListener('onEventReceived', (obj) => {
     const event = {
@@ -10,14 +16,6 @@ window.addEventListener('onEventReceived', (obj) => {
       DATA 		: obj.detail.event,
       MESSAGE 	: obj.detail.event.data.text,
       USERTYPE 	: obj.detail.event.data.tags.badges
-    }
-    
-    let counter = {
-      SLOOP 	: parseInt($('.sloopsCounter').text()),
-      BRIG  	: parseInt($('.brigsCounter').text()),
-      GALION  	: parseInt($('.galysCounter').text()),
-      WINS 		: parseInt($('.winsCounter').text()),
-      KILLS 	: parseInt($('.killsCounter').text())
     }
   
     if (event.LISTENER === 'message') {
@@ -165,7 +163,25 @@ window.addEventListener('onWidgetLoad', function(obj) {
 function hideSOTCounters()   { $('.sotCounters').css('display','none'); }
 function showSOTCounters()   { $('.main-container').css('display', 'flex'); $('.sotCounters').css('display','block'); }
 function hideWinsCounters()  { $('.victoryCounters').css('display','none'); }
-function showWinsCounters()  { $('.main-container').css('display', 'flex'); $('.victoryCounters').css('display','block'); }
+function showWinsCounters()  { 
+  $('.main-container').css('display', 'flex');
+  $('.victoryCounters').css('display', 'block');
+  
+  const options = {
+    headers: {
+      'TRN-Api-Key': '4bcb30a8-61f3-4dfd-b892-6739ce8e2694',
+      'Content-Type': 'application/json'
+    }
+  };
+
+  fetch(`https://cors-anywhere.herokuapp.com/https://api.fortnitetracker.com/v1/profile/pc/{{epicGameName}}`, options)
+    .then(res => res.json())
+    .then(data => {
+    	counter.WINS = data.stats.curr_p9.top1.value
+    	$('.winsCounter').text(counter.WINS);
+  	})
+    .catch(err => console.log(err))
+}
 function hideKillsCounters() { $('.dailyKillsCounters').css('display','none'); }
 function showKillsCounters() {
   $('.main-container').css('display', 'flex');
@@ -181,7 +197,7 @@ function showKillsCounters() {
     .then(res => res.json())
     .then(data => {
     const seasonID = data.data[data.data.length-1].id;
-    fetch(`https://api.pubg.com/shards/steam/players?filter[playerNames]=${pubgPlayerName}`, options)
+    fetch(`https://api.pubg.com/shards/steam/players?filter[playerNames]={{pubgName}}`, options)
       .then(res => res.json())
       .then(data => { 
       const accountID = data.data[0].id;
