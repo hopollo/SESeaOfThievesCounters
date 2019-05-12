@@ -166,11 +166,22 @@ function showWinsCounters()  {
   $('.main-container').css('display', 'flex');
   $('.victoryCounters').css('display', 'block');
   
+  fetchWins();
+}
+function hideKillsCounters() { $('.dailyKillsCounters').css('display','none'); }
+function showKillsCounters() {
+  $('.main-container').css('display', 'flex');
+  $('.dailyKillsCounters').css('display', 'block');
+  
+  fetchKills();
+}
+
+function fetchWins() {
   const options = {
-    headers: {
-      'TRN-Api-Key': '4bcb30a8-61f3-4dfd-b892-6739ce8e2694',
-      'Content-Type': 'application/json'
-    }
+      headers: {
+        'TRN-Api-Key': '4bcb30a8-61f3-4dfd-b892-6739ce8e2694',
+        'Content-Type': 'application/json'
+      }
   };
 
   fetch(`https://cors-anywhere.herokuapp.com/https://api.fortnitetracker.com/v1/profile/pc/{{epicGameName}}`, options)
@@ -183,13 +194,11 @@ function showWinsCounters()  {
             }
    	 	})
   	})
-    .catch(err => console.log(err))
+    .catch(err => console.log(err)) 
 }
-function hideKillsCounters() { $('.dailyKillsCounters').css('display','none'); }
-function showKillsCounters() {
-  $('.main-container').css('display', 'flex');
-  $('.dailyKillsCounters').css('display', 'block');
-  const options = {
+
+function fetchKills() {
+ const options = {
     headers: {
       "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJiMjI1Yjk1MC01NjdiLTAxMzctOGJmZC0wYzUxY2E4YzhkMGEiLCJpc3MiOiJnYW1lbG9ja2VyIiwiaWF0IjoxNTU3NjIxMjk4LCJwdWIiOiJibHVlaG9sZSIsInRpdGxlIjoicHViZyIsImFwcCI6ImhvcG9sbG90di1nbWFpIn0.Qyfl1mYA0liTm7dVLFmIoHK-a-xukjnyMR7NZZA-Lzk",
       "Accept": "application/vnd.api+json"
@@ -214,14 +223,14 @@ function showKillsCounters() {
               const soloFpp = info["solo-fpp"].dailyKills;
               const duoFpp = info["duo-fpp"].dailyKills;
               const squadFpp = info["squad-fpp"].dailyKills;
-
+				
               $('.killsCounter').text(solo + duo + squad + soloFpp + duoFpp + squadFpp);
             })
           	.catch(err => console.log(err))
     	})
       	.catch(err => console.error(err))
   	})
-    .catch(err => console.error(err))
+    .catch(err => console.error(err)) 
 }
 
 function waitCooldown() {
@@ -231,3 +240,10 @@ function waitCooldown() {
     }, 5000);
     //}, {{cooldownValue}}*1000*60);
 }
+
+
+setInterval(() => {
+  	console.log("Refreshing fetchs data");
+   	fetchWins();
+  	fetchKills();
+}, 120000);
