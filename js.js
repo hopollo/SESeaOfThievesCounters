@@ -137,8 +137,7 @@ window.addEventListener('onEventReceived', (obj) => {
 });
 
 window.addEventListener('onWidgetLoad', function(obj) {
-  	const url = `https://decapi.me/twitch/game/${obj.detail.channel.username}`;
-    fetch(url)
+    fetch(`https://decapi.me/twitch/game/${obj.detail.channel.username}`)
       .then(res => res.text())
       .then(data => {
           switch(data) {
@@ -200,27 +199,27 @@ function showKillsCounters() {
   fetch("https://api.pubg.com/shards/steam/seasons", options)
     .then(res => res.json())
     .then(data => {
-    const seasonID = data.data[data.data.length-1].id;
-    fetch(`https://api.pubg.com/shards/steam/players?filter[playerNames]={{pubgName}}`, options)
-      .then(res => res.json())
-      .then(data => { 
-      const accountID = data.data[0].id;
-      fetch(`https://api.pubg.com/shards/steam/players/${accountID}/seasons/${seasonID}`, options)
+      const seasonID = data.data[data.data.length-1].id;
+      fetch(`https://api.pubg.com/shards/steam/players?filter[playerNames]={{pubgName}}`, options)
         .then(res => res.json())
-        .then(data => {
-          const info = data.data.attributes.gameModeStats;
-          const solo = info.solo.dailyKills;
-          const duo = info.duo.dailyKills;
-          const squad = info.squad.dailyKills;
-          const soloFpp = info["solo-fpp"].dailyKills;
-          const duoFpp = info["duo-fpp"].dailyKills;
-          const squadFpp = info["squad-fpp"].dailyKills;
-        
-          $('.killsCounter').text(solo + duo + squad + soloFpp + duoFpp + squadFpp);
-      	})
-        .catch(err => console.log(err))
+        .then(data => { 
+          const accountID = data.data[0].id;
+          fetch(`https://api.pubg.com/shards/steam/players/${accountID}/seasons/${seasonID}`, options)
+            .then(res => res.json())
+            .then(data => {
+              const info = data.data.attributes.gameModeStats;
+              const solo = info.solo.dailyKills;
+              const duo = info.duo.dailyKills;
+              const squad = info.squad.dailyKills;
+              const soloFpp = info["solo-fpp"].dailyKills;
+              const duoFpp = info["duo-fpp"].dailyKills;
+              const squadFpp = info["squad-fpp"].dailyKills;
+
+              $('.killsCounter').text(solo + duo + squad + soloFpp + duoFpp + squadFpp);
+            })
+          	.catch(err => console.log(err))
     	})
-      .catch(err => console.error(err))
+      	.catch(err => console.error(err))
   	})
     .catch(err => console.error(err))
 }
