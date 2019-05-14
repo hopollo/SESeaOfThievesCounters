@@ -1,12 +1,12 @@
 # SEGamesCounters
 ### EN
-This is a StreamElements custom widget code for Sea of thieves/Fornite to display Sunked boats/Wins on stream.
-This overlay will automaticly be hidden if the game is not Sea of thieves or Fornite on your stream while loading it.
-Values of the counter are added from your twitch chat by command you choose/defaults.
+This is a StreamElements custom widget code to display some games data on stream.
+This overlay will automaticly be hidden if the game is not recognized on your stream while loading it.
+Values of the counter are added from your twitch chat by command you choose/defaults & by automaticly getting games stats data.
 ### FR
-Il s'agit d'un widget custom dans StreamElements pour Sea of thieves/Fornite afin d'afficher les bateaux coulés/Victoires en stream.
-Cet overlay sera automatiquement masqué si la cathégorie de jeu du stream n'est pas Sea of thieves ou Fortnite.
-Les valeures sont ajoutée directement depuis le tchat twitch par les commands choisies/par défaut.
+Il s'agit d'un widget custom dans StreamElements pour afficher des stats de jeux en stream.
+Cet overlay sera automatiquement masqué si la cathégorie de jeu du stream n'est pas reconnue.
+Les valeures sont ajoutés directement depuis le tchat twitch par commandes définies/par défaut ou automatiquement via vos stats.
 
 # How to add it / Comment l'ajouter ?
 ### EN
@@ -15,3 +15,8 @@ Les valeures sont ajoutée directement depuis le tchat twitch par les commands c
 ### FR
 - Copiez le code depuis github (raw) et collez le dans le Custom widget de StreamElements dans chacunes des catégories (HTML/CSS/JS/FIELDS).
 - Sauvegardez l'overlay.
+
+# Games Supported / Jeux Supportés
+- Sea Of Thieves : Boats sunked/Batêaux coulés
+- PUBG : Daily kills/Kills journaliers
+- FORTNITE : Seasons Wins/Victoires de la saison
