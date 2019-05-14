@@ -1,3 +1,7 @@
+- 14/05/2019 :
+Added PUBG daily kills, Fornite seasons wins, Autofetching data from your in-game profile, Refresh fetched data every 2 minutes
+Ajout des Kills journaliers PUBG, victoires de la saison Fortnite, Intérogation auto de stats de votre profile de jeu, rafraichissement de celles-ci toutes les 2 minutes.
+
 - 26/04/2019 :
 Added stream game check every 5 minutes to show/hide the counter
 Ajout de contrôle du jeu toutes les 5 minutes pour afficher/masquer le conteur
