@@ -9,13 +9,13 @@
 }
 
 .main-container {
-  display : none;
+  display: flex;
   flex-wrap: wrap;
   text-align: center;
   justify-content: center;
 }
 
-.sotCounters, .victoryCounters, .dailyKillsCounters { display: none; }
+.main-container > div { display: none; }
 
 .counters { font-size: 20px; font-weight: bold; text-shadow: 1px 1px 1px black; }
 
