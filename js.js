@@ -1,6 +1,10 @@
 /* By HoPollo */
+let channelName = "";
 let onCooldown = false;
 let currentVotes = 0;
+let currentWins = [];
+let currentKills = [];
+let dataSaved = false;
 
 let counter = {
       SLOOP 	: parseInt($('.sloopsCounter').text()),
@@ -19,11 +23,7 @@ window.addEventListener('onEventReceived', (obj) => {
     }
   
     if (event.LISTENER === 'message') {
-      	switch(event.USERTYPE) {
-          case "":
-            return;
-            break;
-        }
+      	if (event.USERTYPE == "") return;
       
         switch(event.MESSAGE) {
           case '{{winsCommand}}':
@@ -39,7 +39,6 @@ window.addEventListener('onEventReceived', (obj) => {
             addGalion();
             break;
           case '{{SOTRefreshCommand}}':
-          case '{{WinsRefreshCommand}}':
             refreshCounters();
             break;
           case '{{winsCommand}}-':
@@ -137,46 +136,42 @@ window.addEventListener('onEventReceived', (obj) => {
 });
 
 window.addEventListener('onWidgetLoad', function(obj) {
-    fetch(`https://decapi.me/twitch/game/${obj.detail.channel.username}`)
+  	channelName = obj.detail.channel.username;
+    fetchCurrentGame(channelName);
+});
+
+function fetchCurrentGame(channelName) {
+  fetch(`https://decapi.me/twitch/game/${channelName}`)
       .then(res => res.text())
       .then(data => {
           switch(data) {
             case 'Sea of Thieves':
-              $('.main-container').css('display', 'flex');
               showSOTCounters();
               break;
             case 'Fortnite':
-              $('.main-container').css('display', 'flex');
               showWinsCounters();
               break;
             case "PLAYERUNKNOWN'S BATTLEGROUNDS":
-              $('.main-container').css('display', 'flex');
               showKillsCounters();
-            default:
-              $('.main-container').css('display', 'none');
           }
       })
   	  .catch(err => console.error(err))
-});
+}
 
 function hideSOTCounters()   { $('.sotCounters').css('display','none'); }
-function showSOTCounters()   { $('.main-container').css('display', 'flex'); $('.sotCounters').css('display','block'); }
-function hideWinsCounters()  { $('.victoryCounters').css('display','none'); }
+function showSOTCounters()   { $('.sotCounters').css('display','block'); }
+function hideWinsCounters()  { $('.dailyVictoryCounters').css('display','none'); }
 function showWinsCounters()  { 
-  $('.main-container').css('display', 'flex');
-  $('.victoryCounters').css('display', 'block');
-  
-  fetchWins();
+  $('.dailyVictoryCounters').css('display', 'block');
+  fetchFortniteData();
 }
 function hideKillsCounters() { $('.dailyKillsCounters').css('display','none'); }
 function showKillsCounters() {
-  $('.main-container').css('display', 'flex');
   $('.dailyKillsCounters').css('display', 'block');
-  
-  fetchKills();
+  fetchPubgData();
 }
 
-function fetchWins() {
+function fetchFortniteData() {
   const options = {
       headers: {
         'TRN-Api-Key': '4bcb30a8-61f3-4dfd-b892-6739ce8e2694',
@@ -188,8 +183,13 @@ function fetchWins() {
     .then(res => res.json())
     .then(data => {
     	Object.keys(data.stats).forEach((_) => {
-      		if (_.includes('curr_')) { 
-              counter.WINS = data.stats[_].top1.value;
+      		if (_.includes('curr_')) {
+              if (!dataSaved) {
+                currentWins[0] = data.stats[_].top1.value;
+                dataSaved = true;
+              }
+              currentWins[1] = data.stats[_].top1.value;
+              counter.WINS = currentWins[1] - currentWins[0];
           	  $('.winsCounter').text(counter.WINS);
             }
    	 	})
@@ -197,7 +197,7 @@ function fetchWins() {
     .catch(err => console.log(err)) 
 }
 
-function fetchKills() {
+function fetchPubgData() {
  const options = {
     headers: {
       "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJiMjI1Yjk1MC01NjdiLTAxMzctOGJmZC0wYzUxY2E4YzhkMGEiLCJpc3MiOiJnYW1lbG9ja2VyIiwiaWF0IjoxNTU3NjIxMjk4LCJwdWIiOiJibHVlaG9sZSIsInRpdGxlIjoicHViZyIsImFwcCI6ImhvcG9sbG90di1nbWFpIn0.Qyfl1mYA0liTm7dVLFmIoHK-a-xukjnyMR7NZZA-Lzk",
@@ -224,7 +224,13 @@ function fetchKills() {
               const duoFpp = info["duo-fpp"].dailyKills;
               const squadFpp = info["squad-fpp"].dailyKills;
 				
-              $('.killsCounter').text(solo + duo + squad + soloFpp + duoFpp + squadFpp);
+              if (!dataSaved) {
+                currentKills[0] = solo + duo + squad + soloFpp + duoFpp + squadFpp;
+                dataSaved = true;
+              }
+              currentKills[1] = solo + duo + squad + soloFpp + duoFpp + squadFpp;
+              counter.KILLS = currentKills[1] - currentKills[0];
+              $('.killsCounter').text(counter.KILLS);
             })
           	.catch(err => console.log(err))
     	})
@@ -237,13 +243,9 @@ function waitCooldown() {
  	onCooldown = true;
   	setTimeout(() => {
     	onCooldown = false;
-    }, 5000);
-    //}, {{cooldownValue}}*1000*60);
+    }, {{cooldownValue}}*60*1000);
 }
 
-
 setInterval(() => {
-  	console.log("Refreshing fetchs data");
-   	fetchWins();
-  	fetchKills();
-}, 120000);
+  	fetchCurrentGame(channelName);
+}, 60000);
