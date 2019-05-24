@@ -1,3 +1,9 @@
+- 24/05/2019 :
+Fixed display issues of counter depending on supported games
+Added auto daily wins calculating from Fortnite
+Réparation de problemes d'affichages de compteurs en fonction des jeux supportés
+Ajout de calcul automatique de win journalieres pour Fortnite
+
 - 14/05/2019 :
 Added PUBG daily kills, Fornite seasons wins, Autofetching data from your in-game profile, Refresh fetched data every 2 minutes
 Ajout des Kills journaliers PUBG, victoires de la saison Fortnite, Intérogation auto de stats de votre profile de jeu, rafraichissement de celles-ci toutes les 2 minutes.
