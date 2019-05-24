@@ -19,4 +19,4 @@ Les valeures sont ajoutés directement depuis le tchat twitch par commandes déf
 # Games Supported / Jeux Supportés
 - Sea Of Thieves : Boats sunked/Batêaux coulés
 - PUBG : Daily kills/Kills journaliers
-- FORTNITE : Seasons Wins/Victoires de la saison
+- FORTNITE : Daily Wins/Victoires journalières
